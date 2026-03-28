@@ -1,9 +1,14 @@
-import { openai } from '@ai-sdk/openai';
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { streamText, Message } from 'ai';
 import { getSystemPrompt } from '@/lib/prompts';
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
+
+// Initialize Google Generative AI
+const google = createGoogleGenerativeAI({
+  apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY,
+});
 
 export async function POST(req: Request) {
   try {
@@ -23,10 +28,9 @@ export async function POST(req: Request) {
     // 建立此次對話陣列，將系統提示詞置於首位
     const fullMessages = [systemPrompt, ...messages];
 
-    // 呼叫 OpenAI API 取得 Streaming Response
-    // 使用 gpt-4o-mini 以達到快速回應且成本可控 (也可以換成 gpt-4o)
+    // 呼叫 Google Gemini API 取得 Streaming Response
     const result = await streamText({
-      model: openai('gpt-4o-mini'),
+      model: google('gemini-1.5-flash'), // 使用 Gemini Flash
       messages: fullMessages,
       temperature: 0.7, 
     });
