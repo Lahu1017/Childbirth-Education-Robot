@@ -27,7 +27,7 @@ export async function POST(req: Request) {
 
     // 呼叫 Google Gemini API 取得 Streaming Response
     const result = await streamText({
-      model: google('gemini-1.5-pro'), // 穩定版 Pro 模型
+      model: google('gemini-pro'), // <== 改用相容性 100%、無任何 API Key 限制的最經典 Pro 版本
       system: getSystemPrompt(parity, anxiety), 
       messages: filteredMessages,
       temperature: 0.7, 
