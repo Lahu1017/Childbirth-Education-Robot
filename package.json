@@ -9,9 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@ai-sdk/google": "^0.0.52",
-    "@ai-sdk/openai": "^0.0.52",
-    "ai": "^3.3.16",
+    "@ai-sdk/openai": "^0.0.66",
+    "ai": "^3.4.7",
     "lucide-react": "^0.428.0",
     "next": "14.2.5",
     "react": "^18",
