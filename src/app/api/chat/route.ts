@@ -1,9 +1,15 @@
-import { groq } from '@ai-sdk/groq';
+import { createOpenAI } from '@ai-sdk/openai';
 import { streamText } from 'ai';
 import { getSystemPrompt } from '@/lib/prompts';
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
+
+// 使用最穩定的 OpenAI 語法「偽裝」連線到 Groq 機房 (解決所有版本不相容問題)
+const groq = createOpenAI({
+  baseURL: 'https://api.groq.com/openai/v1',
+  apiKey: process.env.GROQ_API_KEY || '', // 防止 TypeScript 型別檢查抱錯
+});
 
 export async function POST(req: Request) {
   try {
