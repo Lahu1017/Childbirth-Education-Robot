@@ -3,21 +3,34 @@
 @tailwind utilities;
 
 :root {
-  --background: #FFFDF7; /* 暖白背景 */
-  --foreground: #333333;
-  --primary: #F4A261; /* 溫馨杏橘色 */
-  --primary-foreground: #FFFFFF;
-  --secondary: #E9EDC9; /* 柔和醫療綠，用於使用者訊息氣泡 */
-  --secondary-foreground: #333333;
-  --muted: #F3F4F6;
-  --muted-foreground: #6B7280;
-  --warning: #E76F51; /* 警示紅橘色 */
-  --warning-foreground: #FFFFFF;
+  /* 溫軟的背景色，淡淡的粉白 */
+  --background: #fffafa; 
+  --foreground: #4a4a4a;
+  
+  /* 主要按鈕與亮點色 - 柔和朝霞橘粉 */
+  --primary: #fb9285; 
+  --primary-hover: #fa8172;
+  --primary-foreground: #ffffff;
+  
+  /* 次要色 (例如對話氣泡) - 柔和的香草/淺膚色 */
+  --secondary: #fff5f2; 
+  --secondary-foreground: #5c5c5c;
+  
+  /* 靜音色 (例如不重要的文字或背景) */
+  --muted: #fef0f0;
+  --muted-foreground: #9ca3af;
+  
+  /* 警告色 - 微紅 */
+  --warning: #ef4444; 
+  --warning-foreground: #ffffff;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
+  /* 加入一個輕微的徑向漸層來增加立體感 */
+  background-image: radial-gradient(circle at 50% 0%, #fffafa 0%, #faeceb 100%);
+  background-attachment: fixed;
 }
 
 /* 隱藏原生捲軸但保留捲動功能 (可用於快速問題列表) */
@@ -27,4 +40,13 @@ body {
 .scrollbar-hide {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+}
+
+/* 玻璃質感共用類別 */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 20px -2px rgba(250, 150, 150, 0.1);
 }

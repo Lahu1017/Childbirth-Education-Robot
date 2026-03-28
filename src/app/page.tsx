@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useChat } from "ai/react";
-import { Stethoscope, Send, AlertTriangle, User, ArrowRight, Activity, Smile, Frown } from "lucide-react";
+import { Stethoscope, Send, AlertTriangle, User, ArrowRight, Activity, Smile, Frown, Sparkles } from "lucide-react";
 
 type AppStep = "disclaimer" | "setup" | "chat";
 
@@ -99,9 +99,7 @@ export default function ChatPage() {
 
     // 正常傳送
     if (overrideInput) {
-      // If triggered by quick button, simulated event is passed but we need to update input state
       handleSubmit(e, { data: { parity, anxiety } });
-      // Temporary workaround for AI SDK UseChat to submit custom text immediately
       const fakeEvent = { preventDefault: () => {} } as React.FormEvent<HTMLFormElement>;
       handleInputChange({ target: { value: overrideInput } } as any);
       setTimeout(() => handleSubmit(fakeEvent), 50);
@@ -111,47 +109,49 @@ export default function ChatPage() {
   };
 
   return (
-    <main className="flex flex-col h-screen max-w-2xl mx-auto bg-background shadow-xl sm:border-x border-gray-100 overflow-hidden relative">
+    <main className="flex flex-col h-screen max-w-2xl mx-auto shadow-2xl overflow-hidden relative sm:border-x border-rose-50">
       
-      {/* Header */}
-      <header className="bg-primary text-primary-foreground p-4 flex items-center justify-between shadow-sm z-10">
-        <div className="flex items-center gap-2">
-          <div className="bg-white/20 p-2 rounded-full">
-            <Stethoscope size={24} />
+      {/* 重構 Header (毛玻璃高質感) */}
+      <header className="sticky top-0 glass-panel border-b border-rose-100 z-20 px-5 py-4 flex items-center justify-between shadow-sm">
+        <div className="flex items-center gap-3">
+          <div className="bg-gradient-to-br from-peach-300 to-rose-400 p-2.5 rounded-2xl shadow-md text-white">
+            <Sparkles size={22} className="animate-pulse-soft" />
           </div>
           <div>
-            <h1 className="font-bold text-lg">產房小幫手</h1>
-            <p className="text-xs opacity-90">溫柔護理師 24h 陪伴您</p>
+            <h1 className="font-bold text-lg text-rose-500 tracking-wide">產房小幫手</h1>
+            <p className="text-xs text-rose-400 opacity-90">溫柔護理師 24h 陪伴您</p>
           </div>
         </div>
         {step === "chat" && (
           <button 
             onClick={() => setStep("setup")}
-            className="text-xs bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition"
+            className="text-xs font-semibold text-rose-500 bg-white/60 hover:bg-white border border-rose-100 px-4 py-2 rounded-full transition-all shadow-sm hover:shadow-md"
           >
-            調整情境
+            調整狀態
           </button>
         )}
       </header>
 
       {/* 步驟 1：免責聲明 */}
       {step === "disclaimer" && (
-        <div className="flex-1 flex flex-col justify-center p-6 bg-orange-50/50">
-          <div className="bg-white p-8 rounded-2xl shadow-lg border border-orange-100 animate-in fade-in slide-in-from-bottom-4">
-            <div className="flex justify-center mb-4 text-warning">
-              <AlertTriangle size={48} />
+        <div className="flex-1 flex flex-col justify-center p-6 relative">
+          <div className="glass-panel p-8 rounded-[2rem] shadow-xl animate-in fade-in slide-in-from-bottom-8 duration-700">
+            <div className="flex justify-center mb-6 text-rose-400">
+              <div className="bg-rose-50 p-4 rounded-full shadow-inner border border-rose-100">
+                <AlertTriangle size={42} strokeWidth={1.5} />
+              </div>
             </div>
-            <h2 className="text-xl font-bold text-center mb-4 text-foreground">醫療免責聲明</h2>
-            <div className="text-sm text-gray-600 space-y-3 mb-8">
-              <p>本「產程衛教聊天機器人」的目的僅為提供衛教資訊與情緒支持。</p>
-              <p className="text-warning font-semibold">⚠️ 機器人的回覆不能取代專業醫師、助產師或護理師的臨床診斷與建議。</p>
-              <p>若您出現以下情況：<strong>大出血、破水、劇烈且無法忍受的腹痛、胎動明顯減少</strong>，請立即聯絡您的產檢醫院或前往急診就醫。</p>
+            <h2 className="text-2xl font-bold text-center mb-5 text-rose-600">醫療免責聲明</h2>
+            <div className="text-sm/relaxed text-gray-600 space-y-4 mb-8 bg-white/40 p-5 rounded-2xl border border-white/50">
+              <p>本「產房小幫手」的目的僅為提供衛教資訊與情緒支持，陪您度過焦慮的待產時刻。</p>
+              <p className="text-rose-500 font-bold bg-rose-50 p-2 rounded-lg text-center inline-block w-full">⚠️ 不能取代專業醫師的臨床診斷。</p>
+              <p>若您出現以下情況：<strong>大出血、破水、無法忍受的劇痛、胎動明顯減少</strong>，請立即聯絡您的產檢醫院或前往急診就醫。</p>
             </div>
             <button 
               onClick={handleDisclaimerAccept}
-              className="w-full bg-primary hover:bg-orange-500 text-white font-bold py-3 rounded-xl transition shadow-md flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-peach-300 to-rose-400 hover:from-peach-400 hover:to-rose-500 text-white font-bold py-4 rounded-2xl transition-all shadow-lg hover:shadow-rose-200 hover:-translate-y-1 flex items-center justify-center gap-2 text-lg"
             >
-              我了解並同意 <ArrowRight size={18} />
+              我了解並同意 <ArrowRight size={20} />
             </button>
           </div>
         </div>
@@ -159,64 +159,65 @@ export default function ChatPage() {
 
       {/* 步驟 2：情境設定 */}
       {step === "setup" && (
-        <div className="flex-1 overflow-y-auto p-6 bg-orange-50/30">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-            <User className="text-primary"/> 告訴我您的狀況
+        <div className="flex-1 overflow-y-auto p-6 scrollbar-hide pb-20">
+          <h2 className="text-2xl font-bold text-rose-600 mb-8 flex items-center gap-3">
+            <div className="bg-rose-100 p-2 rounded-xl"><User className="text-rose-500" size={24}/></div> 
+            告訴我您的狀況
           </h2>
           
-          <div className="space-y-8 animate-in fade-in zoom-in-95">
-            {/* 產婦經驗 */}
-            <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-              <label className="block text-sm font-bold text-gray-700 mb-3">生產經驗</label>
-              <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500">
+            {/* 產婦經驗卡片 */}
+            <div className="glass-panel p-6 rounded-[2rem] shadow-sm hover:shadow-md transition-all">
+              <label className="block text-base font-bold text-rose-500 mb-4 pb-2 border-b border-rose-100/50">生產經驗</label>
+              <div className="grid grid-cols-2 gap-4">
                 <button
                   onClick={() => setParity("primipara")}
-                  className={`p-3 rounded-lg border-2 text-sm font-medium transition ${parity === "primipara" ? "border-primary bg-orange-50 text-primary" : "border-gray-200 text-gray-500 hover:border-orange-200"}`}
+                  className={`p-4 rounded-2xl border-2 text-[15px] font-bold transition-all ${parity === "primipara" ? "border-rose-300 bg-gradient-to-br from-white to-rose-50 text-rose-600 shadow-sm shadow-rose-100 scale-105" : "border-transparent bg-white/70 text-gray-500 hover:bg-white hover:scale-105"}`}
                 >
-                  🤰 初產婦 (第一次)
+                  <span className="block text-2xl mb-1">🤰</span> 第一次生產
                 </button>
                 <button
                   onClick={() => setParity("multipara")}
-                  className={`p-3 rounded-lg border-2 text-sm font-medium transition ${parity === "multipara" ? "border-primary bg-orange-50 text-primary" : "border-gray-200 text-gray-500 hover:border-orange-200"}`}
+                  className={`p-4 rounded-2xl border-2 text-[15px] font-bold transition-all ${parity === "multipara" ? "border-rose-300 bg-gradient-to-br from-white to-rose-50 text-rose-600 shadow-sm shadow-rose-100 scale-105" : "border-transparent bg-white/70 text-gray-500 hover:bg-white hover:scale-105"}`}
                 >
-                  👩‍👧 經產婦 (有經驗)
+                  <span className="block text-2xl mb-1">👩‍👧</span> 不是第一次
                 </button>
               </div>
             </div>
 
-            {/* 焦慮程度 */}
-            <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-              <label className="block text-sm font-bold text-gray-700 mb-3">目前的焦慮或疼痛程度</label>
+            {/* 焦慮程度體驗 */}
+            <div className="glass-panel p-6 rounded-[2rem] shadow-sm hover:shadow-md transition-all">
+              <label className="block text-base font-bold text-rose-500 mb-4 pb-2 border-b border-rose-100/50">目前的焦慮或疼痛程度</label>
               <div className="grid grid-cols-3 gap-3">
                 <button
                   onClick={() => setAnxiety("low")}
-                  className={`flex flex-col items-center gap-1 p-3 rounded-lg border-2 transition ${anxiety === "low" ? "border-green-400 bg-green-50 text-green-700" : "border-gray-200 text-gray-500"}`}
+                  className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${anxiety === "low" ? "border-green-300 bg-green-50 text-green-700 shadow-sm scale-105" : "border-transparent bg-white/70 text-gray-400 hover:bg-white hover:scale-105"}`}
                 >
-                  <Smile size={24} />
-                  <span className="text-xs font-semibold">放鬆/穩定</span>
+                  <Smile size={28} className={anxiety === "low" ? "text-green-500" : ""} />
+                  <span className="text-sm font-bold">還能放鬆</span>
                 </button>
                 <button
                   onClick={() => setAnxiety("medium")}
-                  className={`flex flex-col items-center gap-1 p-3 rounded-lg border-2 transition ${anxiety === "medium" ? "border-yellow-400 bg-yellow-50 text-yellow-700" : "border-gray-200 text-gray-500"}`}
+                  className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${anxiety === "medium" ? "border-peach-400 bg-peach-50 text-peach-700 shadow-sm scale-105" : "border-transparent bg-white/70 text-gray-400 hover:bg-white hover:scale-105"}`}
                 >
-                  <Activity size={24} />
-                  <span className="text-xs font-semibold">有點痛/緊張</span>
+                  <Activity size={28} className={anxiety === "medium" ? "text-peach-500" : ""} />
+                  <span className="text-sm font-bold">稍微緊張</span>
                 </button>
                 <button
                   onClick={() => setAnxiety("high")}
-                  className={`flex flex-col items-center gap-1 p-3 rounded-lg border-2 transition ${anxiety === "high" ? "border-red-400 bg-red-50 text-red-700" : "border-gray-200 text-gray-500"}`}
+                  className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${anxiety === "high" ? "border-rose-300 bg-rose-50 text-rose-600 shadow-sm scale-105" : "border-transparent bg-white/70 text-gray-400 hover:bg-white hover:scale-105"}`}
                 >
-                  <Frown size={24} />
-                  <span className="text-xs font-semibold">非常痛/害怕</span>
+                  <Frown size={28} className={anxiety === "high" ? "text-rose-500 font-bold" : ""} />
+                  <span className="text-sm font-bold">非常害怕</span>
                 </button>
               </div>
             </div>
 
             <button 
               onClick={handleStartChat}
-              className="w-full bg-primary hover:bg-orange-500 text-white font-bold py-4 rounded-xl transition shadow-lg text-lg flex justify-center items-center gap-2"
+              className="w-full bg-gradient-to-r from-rose-400 to-primary hover:from-rose-500 hover:to-primary-hover text-white font-bold py-4 rounded-2xl transition-all shadow-xl hover:shadow-rose-300 text-lg flex justify-center items-center gap-2 hover:-translate-y-1"
             >
-              開始諮詢 <Stethoscope size={20} />
+              開始與護理師對話 <Stethoscope size={22} className="ml-1" />
             </button>
           </div>
         </div>
@@ -224,66 +225,76 @@ export default function ChatPage() {
 
       {/* 步驟 3：對話視窗 */}
       {step === "chat" && (
-        <>
-          <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-6 bg-slate-50 relative pb-32">
+        <div className="flex-1 relative flex flex-col items-center">
+          
+          {/* 對話記錄區 */}
+          <div ref={scrollRef} className="w-full flex-1 overflow-y-auto p-5 space-y-6 pb-40">
             {messages.map((m, index) => (
-              <div key={m.id || index} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"} animate-in slide-in-from-bottom-2`}>
-                <div className={`max-w-[85%] rounded-2xl p-4 shadow-sm text-sm/relaxed whitespace-pre-wrap
+              <div key={m.id || index} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"} animate-slide-up`}>
+                <div className={`max-w-[85%] sm:max-w-[75%] p-4 text-[15px]/relaxed whitespace-pre-wrap shadow-sm transition-all
                   ${m.role === "user" 
-                    ? "bg-secondary text-secondary-foreground rounded-tr-none" 
+                    ? "bg-gradient-to-br from-peach-200 to-rose-200 text-stone-800 rounded-[2rem] rounded-tr-md" 
                     : m.content.includes("⚠️") 
-                      ? "bg-red-50 border border-red-200 text-red-800 rounded-tl-none" 
-                      : "bg-white border border-gray-100 text-gray-700 rounded-tl-none"}`}
+                      ? "bg-rose-50 border border-rose-300 text-rose-700 rounded-[2rem] rounded-tl-md shadow-rose-100" 
+                      : "glass-panel text-gray-700 rounded-[2rem] rounded-tl-md border-white/60"}`}
                 >
                   {m.content}
                 </div>
               </div>
             ))}
+            
+            {/* 載入中動畫 */}
             {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-white border border-gray-100 text-gray-500 rounded-2xl rounded-tl-none p-4 shadow-sm text-sm flex gap-1 items-center">
-                  <span className="animate-bounce">●</span>
-                  <span className="animate-bounce" style={{ animationDelay: '0.2s' }}>●</span>
-                  <span className="animate-bounce" style={{ animationDelay: '0.4s' }}>●</span>
+              <div className="flex justify-start animate-in fade-in">
+                <div className="glass-panel text-rose-400 rounded-[2rem] rounded-tl-md p-4 shadow-sm text-sm flex gap-1.5 items-center justify-center min-w-[3rem]">
+                  <span className="animate-bounce inline-block w-2 h-2 bg-rose-300 rounded-full" style={{ animationDelay: '0ms' }}></span>
+                  <span className="animate-bounce inline-block w-2 h-2 bg-rose-300 rounded-full" style={{ animationDelay: '150ms' }}></span>
+                  <span className="animate-bounce inline-block w-2 h-2 bg-peach-400 rounded-full" style={{ animationDelay: '300ms' }}></span>
                 </div>
               </div>
             )}
           </div>
 
-          <div className="absolute bottom-0 w-full bg-white border-t border-gray-200 p-3 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.05)]">
-            {/* Quick Questions */}
-            <div className="flex gap-2 overflow-x-auto scrollbar-hide mb-3 pb-1">
+          {/* 懸浮式輸入區 (Floating Bar) */}
+          <div className="absolute w-[92%] sm:w-[90%] flex flex-col gap-3 bottom-0 pb-6 pointer-events-none">
+            
+            {/* 快捷問題列 */}
+            <div className="flex gap-2 overflow-x-auto scrollbar-hide w-full px-2 pointer-events-auto snap-x">
               {QUICK_QUESTIONS.map(q => (
                 <button
                   key={q}
                   onClick={() => handleQuickQuestion(q)}
                   disabled={isLoading}
-                  className="whitespace-nowrap px-4 py-1.5 bg-orange-50 text-orange-700 border border-orange-200 rounded-full text-xs font-medium hover:bg-orange-100 transition shadow-sm disabled:opacity-50"
+                  className="snap-start whitespace-nowrap px-4 py-2 bg-white/80 backdrop-blur-md text-rose-600 border border-white/50 rounded-full text-sm font-bold hover:bg-rose-50 transition-all shadow-sm hover:shadow disabled:opacity-50 disabled:scale-100 scale-95"
                 >
                   {q}
                 </button>
               ))}
             </div>
 
-            {/* Input Form */}
-            <form onSubmit={(e) => handleFormSubmit(e)} className="flex items-center gap-2">
-              <input
-                className="flex-1 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-primary focus:border-primary block p-3 outline-none"
-                value={input}
-                onChange={handleInputChange}
-                placeholder="請輸入您的問題或感受..."
-                disabled={isLoading}
-              />
-              <button
-                type="submit"
-                disabled={isLoading || !input.trim()}
-                className="bg-primary hover:bg-orange-500 disabled:bg-gray-300 text-white rounded-xl p-3 transition shadow-md flex-shrink-0"
-              >
-                <Send size={20} />
-              </button>
-            </form>
+            {/* 輸入框本體 */}
+            <div className="w-full glass-panel shadow-2xl rounded-[2rem] p-2 pr-2 border-white pointer-events-auto">
+              <form onSubmit={(e) => handleFormSubmit(e)} className="flex items-center gap-2">
+                <input
+                  className="flex-1 bg-transparent text-gray-800 text-base px-4 py-3 outline-none placeholder:text-gray-400/80 font-medium"
+                  value={input}
+                  onChange={handleInputChange}
+                  placeholder="想問些什麼呢？..."
+                  disabled={isLoading}
+                  autoComplete="off"
+                />
+                <button
+                  type="submit"
+                  disabled={isLoading || !input.trim()}
+                  className="bg-gradient-to-r from-peach-400 to-rose-400 hover:from-peach-500 hover:to-rose-500 disabled:from-gray-300 disabled:to-gray-200 disabled:text-gray-400 text-white rounded-full p-3 transition-all shadow-md active:scale-95 flex-shrink-0 mr-1"
+                >
+                  <Send size={20} className={isLoading || !input.trim() ? "" : "-ml-1 mt-0.5"} />
+                </button>
+              </form>
+            </div>
+            
           </div>
-        </>
+        </div>
       )}
     </main>
   );
