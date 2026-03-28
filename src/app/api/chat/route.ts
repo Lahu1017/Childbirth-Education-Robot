@@ -20,9 +20,9 @@ export async function POST(req: Request) {
 
     // 呼叫 Google Gemini API 取得 Streaming Response
     const result = await streamText({
-      model: google('gemini-1.5-flash'),
-      system: getSystemPrompt(parity, anxiety), // <== 改用專屬的 system 參數
-      messages: messages, // 這裡只放 user 跟 assistant 的純淨對話紀錄
+      model: google('gemini-1.5-pro-latest'), // <== 更換為相容性最高的 Pro 模型
+      system: getSystemPrompt(parity, anxiety), 
+      messages: messages,
       temperature: 0.7, 
     });
 
