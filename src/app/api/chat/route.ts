@@ -18,11 +18,18 @@ export async function POST(req: Request) {
     const parity = data?.parity || 'primipara'; 
     const anxiety = data?.anxiety || 'medium';
 
+    // Gemini 嚴格規定對話歷史「必須由 user 角色開頭」。
+    // 前端預設產生的第一句歡迎詞是 assistant，會導致 Gemini 崩潰，因此在此將其過濾掉。
+    let filteredMessages = [...messages];
+    while (filteredMessages.length > 0 && filteredMessages[0].role !== 'user') {
+      filteredMessages.shift();
+    }
+
     // 呼叫 Google Gemini API 取得 Streaming Response
     const result = await streamText({
-      model: google('gemini-1.5-pro-latest'), // <== 更換為相容性最高的 Pro 模型
+      model: google('gemini-1.5-pro'), // 穩定版 Pro 模型
       system: getSystemPrompt(parity, anxiety), 
-      messages: messages,
+      messages: filteredMessages,
       temperature: 0.7, 
     });
 
